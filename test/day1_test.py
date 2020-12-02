@@ -1,8 +1,9 @@
-from src.day1 import get_answer1, get_answer2, get_data
+from src.utils.load_data import read_csv
+from src.day1 import get_answer1, get_answer2
 
 
-def test_day1():
-    df_expenses = get_data('test/data/day1.csv')
+def test_get_answer():
+    df_expenses = read_csv('test/data/day1.csv', col_names=['amount'])
     answer1 = get_answer1(df_expenses)
     answer2 = get_answer2(df_expenses)
 

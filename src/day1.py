@@ -1,9 +1,5 @@
+from utils.load_data import read_csv
 import pandas as pd
-
-
-def get_data(input_file_path:str)->pd.DataFrame:
-    df = pd.read_csv(input_file_path, names=['amount'])
-    return df
 
 
 def get_answer1(df_expenses: pd.DataFrame)->float:
@@ -32,7 +28,7 @@ def get_answer2(df_expenses: pd.DataFrame)->float:
         
 
 if __name__ == "__main__":
-    df_expenses = get_data('data/day1.csv')
+    df_expenses = read_csv('data/day1.csv', col_names=['amount'])
     answer1 = get_answer1(df_expenses)
     print(f'Todays first answer is: {answer1}')
     answer2 = get_answer2(df_expenses)

@@ -26,6 +26,10 @@ test:
 	$(PY_ENV_EXEC) pytest test/
 
 
-# get answer 
+# get answer ARG from command line
 answer:
+	$(PY_ENV_EXEC) python src/day$(DAY).py
+
+# get specific answer
+answer1:
 	$(PY_ENV_EXEC) python src/day1.py
