@@ -1,10 +1,5 @@
 PY_ENV_EXEC ?= PYTHONPATH=src poetry run
 
-# Repository setup
-.PHONY: setup
-setup:
-	poetry install
-
 # Cleaning
 .PHONY: poetry-clean
 poetry-clean:
@@ -20,11 +15,17 @@ jupyter-notebook:
 code:
 	PYTHONPATH=src code .
 
+# Initialize for a new day
+init_day:
+	touch data/day$(DAY).csv
+	touch test/data/day$(DAY).csv
+	cp src/day3.py src/day$(DAY).py
+	cp test/day3_test.py test/day$(DAY)_test.py
+
 # tests
 .PHONY: test
 test:
 	$(PY_ENV_EXEC) pytest test/
-
 
 # get answer ARG from command line
 answer:
