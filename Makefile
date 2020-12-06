@@ -19,8 +19,8 @@ code:
 init_day:
 	touch data/day$(DAY).csv
 	touch test/data/day$(DAY).csv
-	cp src/day3.py src/day$(DAY).py
-	cp test/day3_test.py test/day$(DAY)_test.py
+	cp template_day.py src/day$(DAY).py
+	cp template_day_test.py test/day$(DAY)_test.py
 
 # tests
 .PHONY: test
