@@ -1,5 +1,5 @@
-from src.utils.load_data import read_csv
-from src.2021.dayX import get_answer1, get_answer2
+from utils.load_data import read_csv
+from year2021.dayX import get_answer1, get_answer2
 
 
 def test_get_answer():
