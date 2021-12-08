@@ -11,7 +11,6 @@ def public_key_to_loop_size(pub_key:int)->int:
         val = val % 20201227
         if val == pub_key:
             loop_size = ii + 1
-            print(ii)
             break
     if ii == maxItt-1:
         raise ValueError(f'loop size cannot be derived from public key: {pub_key}')
