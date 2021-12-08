@@ -6,10 +6,6 @@ jupyter-notebook: export PYTHONPATH=src/
 jupyter-notebook:
 	$(PY_ENV_EXEC) jupyter notebook
 
-.PHONY: code
-code:
-	PYTHONPATH=src code .
-
 # Initialize for a new day
 init_day:
 	touch data/2021/day$(DAY).csv
