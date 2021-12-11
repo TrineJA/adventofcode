@@ -1,4 +1,4 @@
-from src.utils.load_data import read_csv
+from src.utils.utils import read_csv
 from src.day20 import get_answer1, get_answer2
 
 

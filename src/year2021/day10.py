@@ -1,4 +1,4 @@
-from utils.load_data import read_csv
+from utils.utils import read_csv
 import pandas as pd
 import re
 import numpy as np

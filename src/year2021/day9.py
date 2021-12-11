@@ -1,4 +1,4 @@
-from utils.load_data import read_csv
+from utils.utils import read_csv, df2grid
 import pandas as pd
 import itertools
 import numpy as np
@@ -50,9 +50,7 @@ def neighbor_bassin_idx(df, bidx):
 
 def get_answer1(df: pd.DataFrame)->float:
     # split in 1 column per value
-    df = df.astype(str)
-    df = df['XX'].str.split('', len(df['XX'][0]), expand=True).drop(columns=[0])
-    df.columns = df.columns-1
+    df = df2grid(df)
     df = df.astype(int)
 
     # find lowpoints

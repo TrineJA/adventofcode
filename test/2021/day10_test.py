@@ -1,4 +1,4 @@
-from utils.load_data import read_csv
+from utils.utils import read_csv
 from year2021.day10 import get_answer1, get_answer2
 
 
