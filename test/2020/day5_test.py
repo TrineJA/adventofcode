@@ -1,9 +1,9 @@
-from src.utils.utils import read_csv
-from src.day5 import get_answer1, get_answer2
+from utils.utils import read_csv
+from year2020.day5 import get_answer1, get_answer2
 
 
 def test_get_answer():
-    df = read_csv('test/data/day5.csv', col_names=['boardingpass'])
+    df = read_csv('test/2020/data/day5.csv', col_names=['boardingpass'])
     boardingpass_list = df.boardingpass.tolist()
 
     answer = get_answer1([boardingpass_list[0]])

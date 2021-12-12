@@ -1,21 +1,6 @@
-from utils.utils import read_csv, df2grid
+from utils.utils import read_csv, df2grid, get_neighbor_idx
 import pandas as pd
 import itertools
-
-
-def get_neighbor_idx(p, df):
-    p_list = [(p[0],p[1]+1),(p[0],p[1]-1),\
-        (p[0]+1,p[1]), (p[0]-1,p[1]),\
-        (p[0]+1,p[1]+1), (p[0]-1,p[1]-1),\
-        (p[0]+1,p[1]-1), (p[0]-1,p[1]+1)\
-        ]
-    # check bounds
-    p_list_clean =  p_list.copy()
-    for pp in p_list:
-        if min(pp)<df.index.min() or max(pp)>df.index.max():
-            p_list_clean.remove(pp)
-    return p_list_clean
-
 
 
 def get_answer1(df: pd.DataFrame)->float:
