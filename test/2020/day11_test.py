@@ -8,4 +8,4 @@ def test_get_answer():
     answer2 = get_answer2(df)
 
     assert answer1 == 37
-    assert answer2 == 336
+    assert answer2 == 26
