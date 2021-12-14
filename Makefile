@@ -10,8 +10,8 @@ jupyter-notebook:
 init_day:
 	touch data/2021/day$(DAY).csv
 	touch test/2021/data/day$(DAY).csv
-	cp template_day.py src/year2021/day$(DAY).py
-	cp template_day_test.py test/2021/day$(DAY)_test.py
+	cp -n template_day.py src/year2021/day$(DAY).py
+	cp -n template_day_test.py test/2021/day$(DAY)_test.py
 
 # tests
 .PHONY: test
