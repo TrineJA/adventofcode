@@ -1,6 +1,3 @@
-from utils.utils import read_csv
-import pandas as pd
-from random import choices
 import heapq
 from itertools import product
 import time
@@ -35,53 +32,65 @@ def get_answer2(dl: list)->float:
     for l in dl:
         spaces.append(int(l.split(' ')[-1]))
     scores = len(spaces)*[0]
-    wins = [0,0,0]
-    game_state = [tuple([0] + scores + spaces + [1])]
-    # get list of all possible dice throws for both players
+    wins = [0,0]
+    game_state = [tuple([0] + scores + spaces + [0] + [1])] # neg_maxscore, score0, score1, space0, space1, player, ngames
+    # get list of all possible dice throws (27)
     all_possible_3_rolls = list(product([1,2,3], [1,2,3], [1,2,3]))
-    all_poosible_3_rolls_2_players = list(product(all_possible_3_rolls, all_possible_3_rolls))
     #these are not unique in sum fo 3 throws (49 unique sum combinations)
-    sum_of_rolls = []
-    for rolls in all_poosible_3_rolls_2_players:
-        sum_of_rolls.append((sum(rolls[0]), sum(rolls[1])))
-    sum_of_3rolls_all_combs= list(Counter(sum_of_rolls).keys())
-    sum_of_3rolls_n = list(Counter(sum_of_rolls).values())
-    sum_of_3rolls_combs_and_n = []
-    for i, ss in enumerate(sum_of_3rolls_all_combs):
-        sum_of_3rolls_combs_and_n.append(ss + (sum_of_3rolls_n[i],))
+    sum_of_rolls = [sum(x) for x in all_possible_3_rolls]
+    sum_of_rolls_unique= list(Counter(sum_of_rolls).keys())
+    sum_of_rolls_n = list(Counter(sum_of_rolls).values())
+    sum_of_rolls_combs_and_n = []
+    for i, ss in enumerate(sum_of_rolls_unique):
+        sum_of_rolls_combs_and_n.append((ss, sum_of_rolls_n[i]))
 
     while game_state:
-        neg_maxscore, score0, score1, space0, space1, ngames = heapq.heappop(game_state)
+        neg_maxscore, score0, score1, space0, space1, player, ngames = heapq.heappop(game_state)
+        #print(f'gamestate: {(neg_maxscore, score0, score1, space0, space1, ngames)}')
         #heap pops according to lowest value of first entry. 
-        #ensures we play the game closest to finishing. keeping the heap small-ish
+        #ensures we play the game closest to finishing. keeping the heap small
 
         # in each loop both players will play.
-        for roll_comb in sum_of_3rolls_combs_and_n:
-        #for roll in all_poosible_3_rolls_2_players:
-            #roll_comb = (sum(roll[0]), sum(roll[1]))
-            new_space0 = move(space0, roll_comb[0])
-            new_space1 = move(space1, roll_comb[1])
-            new_score0 = score0 + new_space0
-            new_score1 = score1 + new_space1
-            new_neg_maxscore = -max(new_score0, new_score1)
-            new_ngames = ngames * roll_comb[2]
-            #new_ngames = 1
+        for roll_comb in sum_of_rolls_combs_and_n:
+            new_ngames = ngames * roll_comb[1]
+            #print(f' looking at {roll_comb}')
+            if player == 0:
+                new_space0 = move(space0, roll_comb[0])
+                if new_space0<1 or new_space0>10:
+                    raise ValueError(f'New space 0 not valid: {new_space0} ({space0} - {roll_comb[0]})')
+                new_score0 = score0 + new_space0
+                if new_score0 >= 21:
+                    wins[0] = wins[0]+new_ngames
+                else:
+                    # add game back to heap
+                    new_player = 1
+                    new_neg_maxscore = -max(new_score0, score1)
+                    assert new_neg_maxscore>-21
+                    heapq.heappush(game_state, (new_neg_maxscore, new_score0, score1, new_space0, space1, new_player, new_ngames))
+            elif player == 1:
+                new_space1 = move(space1, roll_comb[0])
+                if new_space1<1 or new_space1>10:
+                    raise ValueError(f'New space 0 not valid: {new_space1} ({space1} - {roll_comb[1]})')
+                new_score1 = score1 + new_space1
+                if new_score1 >= 21:
+                    wins[1] = wins[1]+new_ngames
+                else: 
+                    # add game back to heap
+                    new_player = 0
+                    new_neg_maxscore = -max(score0, new_score1)
+                    assert new_neg_maxscore>-21
+                    heapq.heappush(game_state, (new_neg_maxscore, score0, new_score1, space0, new_space1, new_player, new_ngames))
+            else:
+                raise ValueError(f'Player is not valid: {player}')
+            #print(f' new gamestate" {(new_neg_maxscore, new_score0, new_score1, new_space0, new_space1, new_ngames)}')
 
-            # if both players are above 21. then player 1 (here index0) wins
-            if new_score0 >= 21:
-                wins[0] = wins[0]+new_ngames
-            elif new_score1 >= 21:
-                wins[1] = wins[1]+new_ngames
-            else: 
-                # add game bag to heap
-                heapq.heappush(game_state, (new_neg_maxscore, new_score0, new_score1, new_space0, new_space1, new_ngames))
-
+    print(f'wins: {wins}')
+    print(f'length of heap (unfinished game states): {len(game_state)}')
+        
     elapsed_sec = time.time() - t
     print(f'time spent[sec]: {round(elapsed_sec)}')
-    print(f'wins: {wins}')
-    print(f'length of heap (unfinished games): {len(game_state)}')
-    return max(wins)
 
+    return max(wins)
 
 
 def get_answer1(dl: list)->float:
@@ -110,9 +119,8 @@ def get_answer1(dl: list)->float:
 
 if __name__ == "__main__":
     dl = open('data/2021/day21.csv').read().splitlines()
-    dl = open('test/2021/data/day21.csv').read().splitlines()
 
-    #answer1 = get_answer1(dl)
-    #print(f'Todays first answer is: {answer1}')
+    answer1 = get_answer1(dl)
+    print(f'Todays first answer is: {answer1}')
     answer2 = get_answer2(dl)
     print(f'Todays second answer is: {answer2}')    
